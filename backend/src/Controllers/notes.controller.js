@@ -74,9 +74,57 @@ export const getNoteOfUser = asyncHandler(async (req, res, next)=>{
 })
 
 export const getAllNotesOfUser = asyncHandler(async (req, res, next)=>{
+    try {
+        if(!req.user){
+            throw new Error(401, "Unathorized Attempt! Please login.")
+        }
 
+        const notes = await Note.find({})
+        console.log(notes);
+
+        res
+            .status(200)
+            .json(
+                new apiResponse(200, "notes fetched", notes)
+            )
+    } catch (error) {
+        next(error);
+    }
 })
 
 export const searchNotesOfUser = asyncHandler(async (req, res, next)=>{
+    try {
+        if(!req.user){
+            throw new apiError(404, "Unathorized Attempt! Please login.")
+        }
+        const { searchTerm } = req.query;
+        if(!searchTerm){
+            throw new apiError(404, "No search term.")
+        }
+        
+        const searchResult = await Note.find({
+            authorId: req.user?._id,
+            $or: [
+              { title: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in title
+              { content: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in content
+              { category: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in category
+            ],
+          });
+            
+        if(searchResult.length === 0){
+            res
+                .status(404)
+                .json(
+                    new apiResponse(404, "No result!", [])
+                )
+        }
 
+        res
+            .status(200)
+            .json(
+                new apiResponse(200, "searched result is here!", searchResult)
+            )
+    } catch (error) {
+        next(error)
+    }
 })
