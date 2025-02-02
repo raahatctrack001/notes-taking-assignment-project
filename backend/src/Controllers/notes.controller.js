@@ -18,21 +18,25 @@ export const createNote = asyncHandler(async (req, res, next)=>{
             throw new apiError(400, "Content for this notes is missing!")
         }
 
-        Note
-            .create({
-                authorId: req.user?._id,
-                title,
-                content,
-                audioURL,
-                category,
-                isPinned,
-            })
-            .then((newNote)=>{
-                res.json(
-                    new apiResponse(201, "Notes created", newNote)
-                )
-            })
-            .catch(error=>next(error))
+        const newNote = await Note.create({
+                            authorId: req.user?._id,
+                            title,
+                            content,
+                            audioURL,
+                            category,
+                            isPinned,
+                        })
+
+        if(!newNote){
+            throw new apiError(500, "failed to create note!")
+        }
+        console.log(newNote)
+
+        res
+            .status(201)
+            .json(
+                new apiResponse(201, "Notes added successfully!!", newNote)
+            )
 
     } catch (error) {
         next(error);
