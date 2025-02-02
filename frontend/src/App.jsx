@@ -1,10 +1,12 @@
-
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Home from "./Pages/Home"
 
 function App() {
-  return <div className='bg-black text-white'>
-    frontend part is here
-  </div>
+  return <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Home/>} />
+    </Routes>
+  </BrowserRouter>
 }
 
 export default App
