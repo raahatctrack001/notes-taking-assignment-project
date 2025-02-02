@@ -21,6 +21,10 @@ const NoteSchema = new mongoose.Schema({
         enum: ["Personal", "Work", "Ideas", "Others"], 
         default: "Others" 
     },
+    favorite:{
+        type: Boolean,
+        default: false,
+    },
     isPinned: {
         type: Boolean, 
         default: false 
