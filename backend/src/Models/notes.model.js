@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const NoteSchema = new mongoose.Schema({
+    authorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     title: { 
         type: String, 
         required: true 
@@ -27,4 +32,5 @@ NoteSchema.pre("save", function (next) {
     next();
 });
 
-export default mongoose.model("Note", NoteSchema);
+const Note = new mongoose.model("Note", NoteSchema);
+export default Note;
