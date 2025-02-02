@@ -7,7 +7,6 @@ import bcryptjs from "bcryptjs"
 
 export const registerUser = asyncHandler(async (req, res, next)=>{
     //extract data from body
-    
     const {username, email, password, repeatPassword, fullName} = req.body;
     if(password !== repeatPassword){
         throw new apiError (404, "Password and confirm password should be same!")
