@@ -17,25 +17,19 @@ export const registerUser = asyncHandler(async (req, res, next)=>{
     try {
         if(userData.some(field=>field?.trim()?0:1)){
             throw new apiError(404, "All fields are necessary!");
-        }
-        
+        }       
         
         //creating new user
-        User
-            .create(req.body)
-            .then((newUser)=>{
-                if(!newUser){
-                    throw new apiError(401, "failed to register user");
-                }
-                console.log(newUser);
-                const {password, refreshToken, resetPasswordToken, ...data} = newUser._doc;
-                res
-                    .status(201)
-                    .json(
-                        new apiResponse(201, `welcome ${newUser.fullName}!!! Now you can keep your notes safely here.`, data)
-                    )
-                })
-            .catch(error=>next(error))
+        const newUser = await User.create(req.body);
+        if(!newUser){
+            throw new apiError(500, "failed to register user due to internal issues!")
+        }
+        const {password, refreshToken, resetPasswordToken, ...data} = newUser._doc;
+        res
+        .status(201)
+        .json(
+            new apiResponse(201, `welcome ${newUser.fullName}!!! Now you can keep your notes safely here.`, data)
+        )       
 
     } catch (error) {
         console.log(error)
@@ -45,10 +39,10 @@ export const registerUser = asyncHandler(async (req, res, next)=>{
 
 export const loginUser = asyncHandler(async (req, res, next) => {    
     const { email, password: pass} = req.body;
-    console.log(req.body)
 
     try {
         const user = await User.findOne({email}).select("+password");
+        console.log(user)
         if(!user){
             throw new apiError(404, "user doesn't exist")
         }

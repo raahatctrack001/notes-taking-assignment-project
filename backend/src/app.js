@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import apiResponse from './Utils/apiResponse.js';
 import authRouter from './Routes/auth.route.js';
+import notesRouter from './Routes/note.route.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/notes", notesRouter)
 
 
 
