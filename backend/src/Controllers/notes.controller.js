@@ -18,21 +18,25 @@ export const createNote = asyncHandler(async (req, res, next)=>{
             throw new apiError(400, "Content for this notes is missing!")
         }
 
-        Note
-            .create({
-                authorId: req.user?._id,
-                title,
-                content,
-                audioURL,
-                category,
-                isPinned,
-            })
-            .then((newNote)=>{
-                res.json(
-                    new apiResponse(201, "Notes created", newNote)
-                )
-            })
-            .catch(error=>next(error))
+        const newNote = await Note.create({
+                            authorId: req.user?._id,
+                            title,
+                            content,
+                            audioURL,
+                            category,
+                            isPinned,
+                        })
+
+        if(!newNote){
+            throw new apiError(500, "failed to create note!")
+        }
+        console.log(newNote)
+
+        res
+            .status(201)
+            .json(
+                new apiResponse(201, "Notes added successfully!!", newNote)
+            )
 
     } catch (error) {
         next(error);
@@ -40,7 +44,33 @@ export const createNote = asyncHandler(async (req, res, next)=>{
 })
 
 export const getNoteOfUser = asyncHandler(async (req, res, next)=>{
+    try {
+        if(!req.user){
+            throw new apiError(401, "Unathorized attempt! please login first.")
+        }
 
+        const { noteId } = req.params;
+        if(!noteId){
+            throw new apiError(400, "NoteId is missing!")
+        }
+
+        const currentNote = await Note.findById(noteId);
+        if(!currentNote){
+            throw new apiError(404, "Note doesn't exist!")
+        }
+
+        if(currentNote.authorId != req.user?._id){
+            throw new apiError(401, "You can't access the notes of other person!")
+        }
+        res
+            .status(200)
+            .json(
+                new apiResponse(200, "Notes found!", currentNote)
+            )
+
+    } catch (error) {
+        next(error)
+    }
 })
 
 export const getAllNotesOfUser = asyncHandler(async (req, res, next)=>{
