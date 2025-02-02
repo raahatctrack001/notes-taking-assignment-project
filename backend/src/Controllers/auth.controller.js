@@ -78,3 +78,23 @@ export const loginUser = asyncHandler(async (req, res, next) => {
         next(error);
     }
 });
+
+export const logoutUser = asyncHandler(async (req, res, next) => {
+    try {
+        const currentUser = await User.findByIdAndUpdate(
+            req.user?._id,
+            {
+                $set: { refreshToken: null } // Clear refreshToken instead of setting it to 1
+            },
+            { new: true }
+        );
+
+        return res
+            .status(200)
+            .clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'None' })
+            .clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'None' })
+            .json(new apiResponse(200, "User logged out", {}));
+    } catch (error) {
+        next(error);
+    }
+});
