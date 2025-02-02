@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken"
 
 export const isUserLoggedIn = asyncHandler(async (req, res, next) => {
     try {
+        // console.log("control reached here")
+        // console.log(req.cookies)
         const { accessToken } = req.cookies;
         if (!accessToken) {
             throw new apiError(401, "Access token is missing, please log in.");

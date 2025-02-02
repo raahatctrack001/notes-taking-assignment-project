@@ -13,7 +13,7 @@ const NoteSchema = new mongoose.Schema({
     content: { 
         type: String 
     },
-    audioUrl: { 
+    audioURL:{
         type: String 
     }, // URL to store the audio file
     category: { 
