@@ -1,5 +1,5 @@
 export default function Favourites(){
     return <div>
-        Favorite
+       Fetch all note card with favorite = true as a field in the card. 
     </div>
 }

@@ -1,8 +1,7 @@
 
-import Register from "./Auth/Register";
-
+import Login from "./Auth/Login";
 export default function HomePage(){
     return <div>
-        <Register />
+        <Login />
     </div>
 }

@@ -8,7 +8,7 @@ export default defineConfig({
         target: "http://localhost:3000", // Backend URL
         secure: false, // Disable SSL for local dev
         changeOrigin: true, // Change origin to match backend
-        rewrite: (path) => path.replace(/^\/api/, ""), // Remove `/api` prefix before forwarding to backend
+        // rewrite: (path) => path.replace(/^\/api/, ""), // Remove `/api` prefix before forwarding to backend
       },
     },
   },

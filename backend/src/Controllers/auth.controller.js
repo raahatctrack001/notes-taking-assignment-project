@@ -38,8 +38,8 @@ export const registerUser = asyncHandler(async (req, res, next)=>{
 })
 
 export const loginUser = asyncHandler(async (req, res, next) => {    
+    console.log("control reached here");
     const { email, password: pass} = req.body;
-
     try {
         const user = await User.findOne({email}).select("+password");
         console.log(user)

@@ -7,7 +7,8 @@ const notesSlice = createSlice({
   },
   reducers: {
     addNote: (state, action) => {
-      state.notes.push(action.payload);
+      
+      state.notes.push(action.payload); // Merge without duplicates
     },
     editNote: (state, action) => {
       const index = state.notes.findIndex((note) => note.id === action.payload.id);
@@ -20,10 +21,13 @@ const notesSlice = createSlice({
     },
     searchNotes: (state, action) => {
       const query = action.payload.toLowerCase();
-      state.notes = state.notes.filter((note) => 
-        note.title.toLowerCase().includes(query) || 
-        note.content.toLowerCase().includes(query)
-      );
+      return {
+        ...state,
+        notes: state.notes.filter((note) =>
+          note.title.toLowerCase().includes(query) ||
+          note.content.toLowerCase().includes(query)
+        ),
+      };
     },
   },
 });

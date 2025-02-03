@@ -1,13 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { signInSuccess } from "../../redux/features/user.slice";
 
 export default function Login () {
+  const { currentUser } = useSelector(state=>state.user);
+console.log("current user in login", currentUser)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  
   const [errors, setErrors] = useState({});
-
+  
+  useEffect(()=>{
+    if(currentUser){
+      navigate('/dashboard?tab=home')
+    }
+  }, [])
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -24,14 +36,17 @@ export default function Login () {
     e.preventDefault();
     if (validateForm()) {
         try {
-            const response = await fetch("/api/v1/user/login", {
+            const response = await fetch("/api/v1/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: formData,
+                body: JSON.stringify(formData),
               });
               
             const data = await response.json();
-            console.log("data", data)
+            if(data.success){
+                dispatch(signInSuccess(data.data));
+                navigate('/dashboard?tab=home');
+            }
           console.log("Login Successful:", formData);
         } catch (error) {
             console.log(error)
@@ -75,6 +90,9 @@ export default function Login () {
             Login
           </button>
         </form>
+        <div className="flex justify-start mt-2 items-center gap-2">
+          <p> Do not have a account?</p> <Link to={'/register'} className="text-blue-600 italic" > register here!</Link>
+        </div>
       </div>
     </div>
   );

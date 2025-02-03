@@ -1,6 +1,12 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { signInSuccess } from "../../redux/features/user.slice";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
+    
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -27,10 +33,24 @@ export default function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form Submitted:", formData);
+      try {
+        const response = await fetch("/api/v1/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+
+          const data = await response.json();
+          if(data.success){
+            dispatch(signInSuccess(data.data))
+            navigate("/dashboard")
+          }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -108,6 +128,9 @@ export default function Register() {
             Register
           </button>
         </form>
+        <div className="flex justify-start mt-2 items-center gap-2">
+          <p>Already have a account?</p> <Link to={'/login'} className="text-blue-600 italic" > login here!</Link>
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import apiResponse from "../Utils/apiResponse.js";
 import { asyncHandler } from "../Utils/asynHandler.js";
 
 export const createNote = asyncHandler(async (req, res, next)=>{
+    console.log(req.body)
     try {
         if(!req.user){
             throw new apiError(401, "Please login to create notes!")
@@ -79,7 +80,7 @@ export const getAllNotesOfUser = asyncHandler(async (req, res, next)=>{
             throw new Error(401, "Unathorized Attempt! Please login.")
         }
 
-        const notes = await Note.find({})
+        const notes = await Note.find({authorId: req.user?._id})
         console.log(notes);
 
         res

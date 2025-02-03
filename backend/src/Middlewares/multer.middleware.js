@@ -19,5 +19,17 @@ const storage = multer.diskStorage({
   })
   
 export const upload = multer({ 
-    storage, 
-})
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 },  // Max file size 10MB (Adjust as needed)
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpg|jpeg|png|gif|mp3|wav|ogg|mp4|avi/;
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileTypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image, audio, and video files are allowed'));
+    }
+  }
+});
