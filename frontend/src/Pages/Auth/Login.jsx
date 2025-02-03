@@ -20,10 +20,22 @@ export default function Login () {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Login Successful:", formData);
+        try {
+            const response = await fetch("/api/v1/user/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: formData,
+              });
+              
+            const data = await response.json();
+            console.log("data", data)
+          console.log("Login Successful:", formData);
+        } catch (error) {
+            console.log(error)
+        }
     }
   };
 

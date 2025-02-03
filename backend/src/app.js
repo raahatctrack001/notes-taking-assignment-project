@@ -4,11 +4,14 @@ import cors from 'cors'
 import apiResponse from './Utils/apiResponse.js';
 import authRouter from './Routes/auth.route.js';
 import notesRouter from './Routes/note.route.js';
+import dotenv from 'dotenv';
 
+dotenv.config({path: './.env'})
 const app = express();
 
 app.use(express.json({limit:'16kb'}));
 app.use(express.urlencoded({extended:true, limit:"16kb"}));
+
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
