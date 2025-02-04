@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BsCrosshair, BsFullscreen, BsFullscreenExit, BsX, BsXCircle } from "react-icons/bs";
+import { BsFullscreen, BsFullscreenExit, BsXCircle } from "react-icons/bs";
 
 export default function NoteCardPopup({ note, setPopup }) {
     console.log("note from popup", note)

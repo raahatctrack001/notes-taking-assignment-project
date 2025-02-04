@@ -12,10 +12,7 @@ export default function NotesHeader({setNotes}) {
   // const dispatch = useDispatch();
   
   
-  function handleSearchedNoteClick(note){
-    console.log("notes from search", note)
-    setPopup(true), setNote(note)
-  }
+ 
   useEffect(() => {
     if (searchTerm === "") {
       setSearchedNotes([]); // Clear results if searchTerm is empty

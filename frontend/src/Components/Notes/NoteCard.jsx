@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { BsThreeDotsVertical, BsFillPlayCircleFill, BsFonts, BsHeart } from "react-icons/bs";
+import { BsThreeDotsVertical, BsFillPlayCircleFill, BsFonts, BsHeartFill } from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
 import { format } from "date-fns";
 
-const NoteCard = ({ note }) => {
+const NoteCard = ({ note, setNotes }) => {
   const { title, content, updatedAt, duration } = note;
   const [copied, setCopied] = useState(false);
 
@@ -14,9 +14,22 @@ const NoteCard = ({ note }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  function handleFavClick(e){
+  async function handleFavClick(e){
     e.stopPropagation();
-    alert("repetitive task and waste of time in case of assignment.")
+    try {
+      const response = await fetch(`/api/v1/notes/favorite/${note?._id}`, {method: "POST"})  
+      const data = await response.json();
+
+      if(data.success){
+        setNotes(prev =>
+          prev.map(note => 
+              note._id === data.data._id ? data.data : note
+          )
+      );
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200 w-full max-w-md h-40 flex flex-col justify-between">
@@ -52,7 +65,7 @@ const NoteCard = ({ note }) => {
       {/* Bottom Section: Copy & Options */}
       <div className="flex justify-end items-center mt-3 space-x-4">
         <button className="text-gray-500 hover:text-gray-700" title="favorite" onClick={(e)=>handleFavClick(e)}>
-          <BsHeart className="text-xl" />
+        <BsHeartFill className={`text-xl  ${note.favorite ? 'text-red-500' : 'text-gray-500'}`} />
         </button>
         <button onClick={(e) => handleCopy(e)} className="text-gray-500 hover:text-blue-500" title="copy">
           {copied ? "Copied!" : <FiCopy className="text-xl" />}

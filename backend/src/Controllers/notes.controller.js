@@ -129,3 +129,62 @@ export const searchNotesOfUser = asyncHandler(async (req, res, next)=>{
         next(error)
     }
 })
+
+export const likeNotes = asyncHandler(async (req, res, next)=>{
+    try {
+        if(!req.user){
+            throw new apiError(404, "Unathorized Attempt! Please login.")
+        }
+        const { noteId } = req.params;
+        if(!noteId){
+            throw new apiError(404, "noteId is missing")
+        }
+
+        let likedNote = await Note.findOne({
+            _id: noteId,
+            authorId: req.user?._id
+        });
+        
+        if (!likedNote) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+        
+        likedNote.favorite = !likedNote.favorite;
+        await likedNote.save();
+        
+        if(!likedNote){
+            throw new apiError(500, "failed to make it favorite")
+        }
+
+        res.status(200).json(new apiResponse(200, "added to favorite", likedNote));        
+        
+
+    } catch (error) {
+        next(error)
+    }
+})
+
+export const getFavNotes = asyncHandler(async (req, res, next) => {
+    try {
+        if (!req.user) {
+            throw new apiError(401, "Unauthorized attempt! Please login.");
+        }
+
+        // Await the query result
+        const favNotes = await Note.find({ authorId: req.user._id, favorite: true });
+
+        if (favNotes.length === 0) {
+            return res.status(200).json(
+                new apiResponse(200, "No favorite notes yet", [])
+            );
+        }
+
+        res.status(200).json(
+            new apiResponse(200, "Favorite notes retrieved successfully", favNotes)
+        );
+
+        console.log("Favorite Notes:", favNotes);
+    } catch (error) {
+        next(error);
+    }
+});

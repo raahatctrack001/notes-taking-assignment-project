@@ -58,7 +58,7 @@ export default function NotesArea() {
         <div className="grid grid-cols-4 gap-1 mt-5 border-2 p-2 rounded-xl flex-grow">
           {notesData.map((note, index)=>{
             return <div key={index} onClick={()=>handleNoteClick(note)}  className="cursor-pointer">
-              <NoteCard note={note} />
+              <NoteCard note={note} setNotes={setNotesData} />
               </div>
           })}
         </div>

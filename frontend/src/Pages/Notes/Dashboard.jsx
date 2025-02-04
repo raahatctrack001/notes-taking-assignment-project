@@ -9,7 +9,7 @@ export default function Dashboard(){
     const location = useLocation();   
     const [tab, setTab] = useState(''); 
     const { currentUser } = useSelector(state=>state.user)  
-    console.log("current user from redux", currentUser)
+    // console.log("current user from redux", currentUser)
   
     useEffect(() => {
       const urlParams = new URLSearchParams(location.search);
