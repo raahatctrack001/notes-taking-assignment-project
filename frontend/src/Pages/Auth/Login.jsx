@@ -48,8 +48,9 @@ console.log("current user in login", currentUser)
                 navigate('/dashboard?tab=home');
             }
           console.log("Login Successful:", formData);
-        } catch (error) {
-            console.log(error)
+        } catch (error){
+            alert(error.message)
+            console.log("alert message in login", error)
         }
     }
   };

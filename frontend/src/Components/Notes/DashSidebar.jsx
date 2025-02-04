@@ -1,13 +1,27 @@
 import { BsCalendarCheck, BsHouseFill, BsStarFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { signoutSuccess } from "../../redux/features/user.slice";
+import { useEffect, useState } from "react";
 
 
 export default function DashSidebar({user}){
+    const location = useLocation();   
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [tab, setTab] = useState("");
     // console.log("user in sidebar", user)
+
+    useEffect(() => {
+          const urlParams = new URLSearchParams(location.search);
+          const tabFromUrl = urlParams.get('tab');
+          if (tabFromUrl) {
+            setTab(tabFromUrl);
+          }
+          window.scroll(0, 0)
+        }, [location.search]);
+
     async function handleLogout(){
         try {
             const response = await fetch("/api/v1/auth/logout", {
@@ -34,7 +48,7 @@ export default function DashSidebar({user}){
             <div>
                 <Link to={'/dashboard?tab=home'}>
                     <div 
-                        className="text-xl flex justify-start items-center gap-2 h-10  rounded-3xl pl-2 text-gray-500 font-semibold hover:bg-purple-200 hover:text-purple-900"
+                        className={`text-xl flex justify-start items-center gap-2 h-10 rounded-3xl pl-2 text-gray-500 font-semibold hover:bg-purple-200 hover:text-purple-900 ${tab == 'home' && 'text-purple-900 bg-purple-200'} `}
                         title="Hidden Posts" // Tooltip for Hidden Posts
                       >
                         <BsHouseFill className="text-2xl"/>
@@ -43,7 +57,7 @@ export default function DashSidebar({user}){
                 </Link>
                 <Link to={'/dashboard?tab=favorites'}>
                     <div 
-                        className="text-xl flex justify-start items-center gap-2 h-10 rounded-3xl pl-2 text-gray-500 font-semibold hover:bg-purple-200 hover:text-purple-900"
+                        className={`text-xl flex justify-start items-center gap-2 h-10 rounded-3xl pl-2 text-gray-500 font-semibold hover:bg-purple-200 hover:text-purple-900  ${tab === 'favorites' && 'text-purple-900 bg-purple-200'}`}
                         title="Hidden Posts" // Tooltip for Hidden Posts
                         >
                         <BsStarFill className="text-2xl"/>

@@ -3,56 +3,56 @@ import { useDispatch } from "react-redux";
 import { signInSuccess } from "../../redux/features/user.slice";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Register() {
-    
+export default function Register() {    
     const dispatch = useDispatch();
     const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    fullName: "",
-    password: "",
-    repeatPassword: "",
-  });
+    const [formData, setFormData] = useState({
+      username: "",
+      email: "",
+      fullName: "",
+      password: "",
+      repeatPassword: "",
+    });
 
-  const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-  const validateForm = () => {
-    let newErrors = {};
-    if (!formData.username) newErrors.username = "Username is required!";
-    if (!formData.email) newErrors.email = "Email is required!";
-    if (!formData.fullName) newErrors.fullName = "Full Name is required!";
-    if (!formData.password) newErrors.password = "Password is required!";
-    if (formData.password !== formData.repeatPassword)
-      newErrors.repeatPassword = "Passwords do not match!";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    const validateForm = () => {
+      let newErrors = {};
+      if (!formData.username) newErrors.username = "Username is required!";
+      if (!formData.email) newErrors.email = "Email is required!";
+      if (!formData.fullName) newErrors.fullName = "Full Name is required!";
+      if (!formData.password) newErrors.password = "Password is required!";
+      if (formData.password !== formData.repeatPassword)
+        newErrors.repeatPassword = "Passwords do not match!";
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      try {
-        const response = await fetch("/api/v1/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-          });
+    const handleSubmit = async(e) => {
+      e.preventDefault();
+      if (validateForm()) {
+        try {
+          const response = await fetch("/api/v1/auth/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+            });
 
-          const data = await response.json();
-          if(data.success){
-            dispatch(signInSuccess(data.data))
-            navigate("/dashboard")
-          }
-      } catch (error) {
-        console.log(error);
+            const data = await response.json();
+            if(data.success){
+              dispatch(signInSuccess(data.data))
+              navigate("/dashboard")
+            }
+        } catch (error) {
+          alert(error.message)
+          console.log(error);
+        }
       }
-    }
-  };
+    };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
