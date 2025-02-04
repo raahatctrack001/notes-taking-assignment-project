@@ -1,3 +1,4 @@
+import { rmSync } from "fs";
 import Note from "../Models/notes.model.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
@@ -188,3 +189,21 @@ export const getFavNotes = asyncHandler(async (req, res, next) => {
         next(error);
     }
 });
+
+export const deleteNote = asyncHandler(async (req, res, next)=>{
+    try {
+        const { noteId } = req.params;
+        const deletedNote = await Note.findByIdAndDelete(noteId);
+        if(!deletedNote){
+            throw new apiError(500, "failed to delete note!")
+        }
+
+        res.status(200)
+            .json(
+                new apiResponse(200, "note deleted", deletedNote)
+            )
+
+     } catch (error) {
+        next(error)
+    }
+})

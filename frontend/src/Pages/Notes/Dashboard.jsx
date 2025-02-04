@@ -4,6 +4,7 @@ import DashSidebar from "../../Components/Notes/DashSidebar";
 import NotesArea from "../../Components/Notes/NotesArea";
 import Favourites from "../../Components/Notes/Favourites";
 import { useSelector } from "react-redux";
+import LargeScreenRequired from "../LargeScreenRequired";
 
 export default function Dashboard(){
     const location = useLocation();   
@@ -21,7 +22,9 @@ export default function Dashboard(){
     }, [location.search]);
     
     return (
-      <div className="flex gap-2 h-screen">
+      <div>
+      <div> <LargeScreenRequired /> </div>
+      <div className="hidden md:flex gap-2 h-screen">
         {/* Sidebar - Fixed Position */}
         <div className="w-full max-w-60 border-2 h-screen sticky top-0">
           <DashSidebar user={currentUser} />
@@ -32,6 +35,7 @@ export default function Dashboard(){
           {tab === "home" && <NotesArea />}
           {tab === "favorites" && <Favourites />}
         </div>
+      </div>
       </div>
     );
     
