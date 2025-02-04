@@ -25,11 +25,15 @@ export const registerUser = asyncHandler(async (req, res, next)=>{
             throw new apiError(500, "failed to register user due to internal issues!")
         }
         const {password, refreshToken, resetPasswordToken, ...data} = newUser._doc;
+        const tokens = await generateAccessAndRefreshToken(data._id);
+        if(!tokens){
+            throw new apiError(404, "failed to generate access and referesh token");
+        }
         res
-        .status(201)
-        .json(
-            new apiResponse(201, `welcome ${newUser.fullName}!!! Now you can keep your notes safely here.`, data)
-        )       
+            .status(202)
+            .cookie('accessToken', tokens.accessToken, options)
+            .cookie('refreshToken', tokens.refreshToken, options)
+            .json(new apiResponse(202, "User logged in", data));       
 
     } catch (error) {
         console.log(error)
