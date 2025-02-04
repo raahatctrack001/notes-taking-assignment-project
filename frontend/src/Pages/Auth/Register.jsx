@@ -45,7 +45,7 @@ export default function Register() {
             const data = await response.json();
             if(data.success){
               dispatch(signInSuccess(data.data))
-              navigate("/dashboard")
+              navigate("/dashboard?tab=home")
             }
         } catch (error) {
           alert(error.message)
